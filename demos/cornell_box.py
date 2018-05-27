@@ -156,4 +156,4 @@ camera.ray_extinction_prob = 0.01
 
 from raysect.vtk import visualise_scenegraph
 
-visualise_scenegraph(world)
+visualise_scenegraph(camera, focal_distance=3, zoom=0.5)

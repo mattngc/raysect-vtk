@@ -36,7 +36,7 @@ def convert_node_to_vtk(raysect_node):
         raise TypeError("A VTKNode can only be constructed from a Raysect Node object.")
 
     assembly = vtk.vtkAssembly()
-    # assembly.SetUserTransform(convert_to_vtk_transform(raysect_node.transform))
+    assembly.SetUserTransform(convert_to_vtk_transform(raysect_node.transform))
     for child in raysect_node.children:
         vtk_part = map_raysect_element_to_vtk(child)
         assembly.AddPart(vtk_part)
