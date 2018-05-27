@@ -11,9 +11,6 @@ from raysect.vtk.primitives.geometric_primitives import convert_box_to_vtk, conv
 
 def map_raysect_element_to_vtk(raysect_element):
 
-    # if isinstance(raysect_element, Node):
-    #     return convert_node_to_vtk(raysect_element)
-
     if isinstance(raysect_element, Box):
         return convert_box_to_vtk(raysect_element)
 
@@ -29,16 +26,19 @@ def map_raysect_element_to_vtk(raysect_element):
     elif isinstance(raysect_element, Parabola):
         raise TypeError("Parabolic primitives are not supported for visualisation at this time.")
 
+    elif isinstance(raysect_element, Node):
+        return convert_node_to_vtk(raysect_element)
 
-# def convert_node_to_vtk(raysect_node):
-#
-#     if not isinstance(raysect_node, Node):
-#         raise TypeError("A VTKNode can only be constructed from a Raysect Node object.")
-#
-#     assembly = vtk.vtkAssembly()
-#     # assembly.SetUserTransform(convert_to_vtk_transform(raysect_node.transform))
-#     for child in raysect_node.children:
-#         vtk_part = map_raysect_element_to_vtk(child)
-#         assembly.AddPart(vtk_part)
-#
-#     return assembly
+
+def convert_node_to_vtk(raysect_node):
+
+    if not isinstance(raysect_node, Node):
+        raise TypeError("A VTKNode can only be constructed from a Raysect Node object.")
+
+    assembly = vtk.vtkAssembly()
+    # assembly.SetUserTransform(convert_to_vtk_transform(raysect_node.transform))
+    for child in raysect_node.children:
+        vtk_part = map_raysect_element_to_vtk(child)
+        assembly.AddPart(vtk_part)
+
+    return assembly
