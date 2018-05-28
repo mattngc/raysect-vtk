@@ -1,7 +1,7 @@
 
 import vtk
 
-from raysect.core import Point3D
+from raysect.core import Point3D, rotate_x
 from raysect.primitive import Box, Sphere, Cylinder, Cone
 
 from raysect.vtk.utility import convert_to_vtk_transform
@@ -21,6 +21,7 @@ class VTKGeometricPrimitive:
         transform_filter = vtk.vtkTransformPolyDataFilter()
         transform_filter.SetInputConnection(geometry_source.GetOutputPort())
         transform_filter.SetTransform(self.transform)
+        transform_filter.Update()
         self._transform_filter = transform_filter
 
         mapper = vtk.vtkPolyDataMapper()
@@ -77,6 +78,7 @@ class VTKBox(VTKGeometricPrimitive):
         cube_source.SetYLength(y_width)
         cube_source.SetZLength(z_width)
         cube_source.SetCenter(box_centre.x, box_centre.y, box_centre.z)
+        cube_source.Update()
 
         super().__init__(raysect_box, cube_source)
 
@@ -92,6 +94,7 @@ class VTKSphere(VTKGeometricPrimitive):
         sphere_source.SetRadius(raysect_sphere.radius)
         sphere_source.SetPhiResolution(50)
         sphere_source.SetThetaResolution(50)
+        sphere_source.Update()
 
         super().__init__(raysect_sphere, sphere_source)
 
@@ -107,10 +110,30 @@ class VTKCylinder(VTKGeometricPrimitive):
         cylinder_source.SetRadius(raysect_cylinder.radius)
         cylinder_source.SetHeight(raysect_cylinder.height)
         cylinder_source.SetCenter(0, 0, raysect_cylinder.height/2)
-        cylinder_source.SetDirection(0, 0, 1)
         cylinder_source.SetResolution(50)
+        cylinder_source.Update()
 
-        super().__init__(raysect_cylinder, cylinder_source)
+        self._raysect_primitive = raysect_cylinder
+
+        # Note - VTK cylinders are aligned along the y axis
+        transform = convert_to_vtk_transform(rotate_x(90) * raysect_cylinder.transform)
+        self._transform = transform
+
+        self._geometry_source = cylinder_source
+
+        transform_filter = vtk.vtkTransformPolyDataFilter()
+        transform_filter.SetInputConnection(cylinder_source.GetOutputPort())
+        transform_filter.SetTransform(self.transform)
+        transform_filter.Update()
+        self._transform_filter = transform_filter
+
+        mapper = vtk.vtkPolyDataMapper()
+        mapper.SetInputConnection(transform_filter.GetOutputPort())
+        self._mapper = mapper
+
+        actor = vtk.vtkActor()
+        actor.SetMapper(mapper)
+        self._actor = actor
 
 
 class VTKCone(VTKGeometricPrimitive):
@@ -126,5 +149,6 @@ class VTKCone(VTKGeometricPrimitive):
         cone_source.SetCenter(0, 0, raysect_cone.height/2)
         cone_source.SetDirection(0, 0, 1)
         cone_source.SetResolution(50)
+        cone_source.Update()
 
         super().__init__(raysect_cone, cone_source)
