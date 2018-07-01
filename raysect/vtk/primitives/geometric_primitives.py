@@ -109,14 +109,14 @@ class VTKCylinder(VTKGeometricPrimitive):
         cylinder_source = vtk.vtkCylinderSource()
         cylinder_source.SetRadius(raysect_cylinder.radius)
         cylinder_source.SetHeight(raysect_cylinder.height)
-        cylinder_source.SetCenter(0, 0, raysect_cylinder.height/2)
+        cylinder_source.SetCenter(0, raysect_cylinder.height/2, 0)
         cylinder_source.SetResolution(50)
         cylinder_source.Update()
 
         self._raysect_primitive = raysect_cylinder
 
         # Note - VTK cylinders are aligned along the y axis
-        transform = convert_to_vtk_transform(rotate_x(90) * raysect_cylinder.transform)
+        transform = convert_to_vtk_transform(raysect_cylinder.transform * rotate_x(90))
         self._transform = transform
 
         self._geometry_source = cylinder_source
