@@ -25,6 +25,9 @@ def visualise_scenegraph(camera, focal_distance=1, zoom=1):
         else:
             renderer.AddActor(vtk_element.actor)
 
+    axes = vtk.vtkAxesActor()
+    renderer.AddActor(axes)
+
     renWin = vtk.vtkRenderWindow()
     renWin.AddRenderer(renderer)
     renWin.SetSize(512, 512)
