@@ -71,6 +71,8 @@ booleanOperationActor.SetMapper(booleanOperationMapper)
 renderer = vtk.vtkRenderer()
 renderer.AddViewProp(booleanOperationActor)
 renderer.SetBackground(.1, .2, .3)
+axes = vtk.vtkAxesActor()
+renderer.AddActor(axes)
 renderWindow = vtk.vtkRenderWindow()
 renderWindow.AddRenderer(renderer)
 

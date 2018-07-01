@@ -14,11 +14,13 @@ world = World()
 cyl_x = Cylinder(1, 4.2, transform=rotate(90, 0, 0)*translate(0, 0, -2.1))
 cyl_y = Cylinder(1, 4.2, transform=rotate(0, 90, 0)*translate(0, 0, -2.1))
 cyl_z = Cylinder(1, 4.2, transform=rotate(0, 0, 0)*translate(0, 0, -2.1))
-cube = Box(Point3D(-1.5, -1.5, -1.5), Point3D(1.5, 1.5, 1.5))
-sphere = Sphere(2.0)
 
 # Intersect(sphere, Subtract(cube, Union(Union(cyl_x, cyl_y), cyl_z)), world, translate(-2.1,2.1,2.5)*rotate(30, -20, 0), schott("N-LAK9"))
-Union(Union(cyl_x, cyl_y), cyl_z, world)
+# Union(Union(cyl_x, cyl_y), cyl_z, world)
+Intersect(Intersect(cyl_x, cyl_y), cyl_z, world)
+# Intersect(cyl_x, cyl_y, world)
+# Union(cyl_y, cyl_z, world)
+# Union(cyl_z, cyl_x, world)
 
 camera = PinholeCamera((256, 256), parent=world, transform=translate(0, 0, -4) * rotate(0, 0, 0))
 
