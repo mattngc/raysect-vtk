@@ -2,7 +2,7 @@
 import vtk
 
 from raysect.core import Observer, World, Point3D, Vector3D
-from raysect.vtk.primitives.mapper import map_raysect_element_to_vtk, VTKAssembly
+from raysect_vtk.primitives.mapper import map_raysect_element_to_vtk, VTKAssembly
 
 
 def visualise_scenegraph(camera, focal_distance=1, zoom=1):

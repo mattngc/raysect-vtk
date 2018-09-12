@@ -2,7 +2,7 @@
 import vtk
 from raysect.core import translate, rotate, rotate_x, rotate_z
 from raysect.primitive import Cylinder
-from raysect.vtk.utility import convert_to_vtk_transform
+from raysect_vtk.utility import convert_to_vtk_transform
 
 
 # cyl_x = Cylinder(1, 4.2, transform=rotate(90, 0, 0)*translate(0, 0, -2.1))

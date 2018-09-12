@@ -1,7 +1,7 @@
 
 import vtk
 from raysect.core import translate
-from raysect.vtk.utility import convert_to_vtk_transform
+from raysect_vtk.utility import convert_to_vtk_transform
 
 
 sphereSource1 = vtk.vtkSphereSource()

@@ -4,7 +4,7 @@ import vtk
 from raysect.core import Point3D, rotate_x
 from raysect.primitive import Box, Sphere, Cylinder, Cone
 
-from raysect.vtk.utility import convert_to_vtk_transform
+from raysect_vtk.utility import convert_to_vtk_transform
 
 
 class VTKGeometricPrimitive:

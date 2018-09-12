@@ -45,7 +45,7 @@ setup(
     author_email="developers@raysect.org",
     description='Visualisation tools with VTK for the Raysect ray-tracing framework',
     license="BSD",
-    namespace_packages=['raysect'],
+    # namespace_packages=['raysect'],
     packages=find_packages(),
     include_package_data=True,
     ext_modules=cythonize(extensions, nthreads=threads, force=force, compiler_directives=directives)

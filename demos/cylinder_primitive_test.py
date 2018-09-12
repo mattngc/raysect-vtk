@@ -15,6 +15,6 @@ c1 = Cylinder(1.0, height=3, transform=translate(0, 0, 0), parent=world)
 
 camera = PinholeCamera((256, 256), parent=world, transform=translate(0, 0, -4) * rotate(0, 0, 0))
 
-from raysect.vtk import visualise_scenegraph
+from raysect_vtk import visualise_scenegraph
 
 visualise_scenegraph(camera)

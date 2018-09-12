@@ -154,6 +154,6 @@ camera.ray_extinction_min_depth = 3
 camera.ray_extinction_prob = 0.01
 
 
-from raysect.vtk import visualise_scenegraph
+from raysect_vtk import visualise_scenegraph
 
 visualise_scenegraph(camera, focal_distance=3, zoom=0.5)

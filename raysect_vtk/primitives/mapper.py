@@ -4,8 +4,8 @@ import vtk
 from raysect.core import Node
 from raysect.primitive import Box, Sphere, Cylinder, Cone, Parabola, Intersect, Union, Subtract
 
-from raysect.vtk.utility import convert_to_vtk_transform
-from raysect.vtk.primitives.geometric_primitives import VTKBox, VTKSphere, VTKCylinder, VTKCone, VTKGeometricPrimitive
+from raysect_vtk.utility import convert_to_vtk_transform
+from raysect_vtk.primitives.geometric_primitives import VTKBox, VTKSphere, VTKCylinder, VTKCone, VTKGeometricPrimitive
 
 
 def map_raysect_element_to_vtk(raysect_element):
