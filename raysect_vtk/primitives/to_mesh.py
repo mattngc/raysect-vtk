@@ -42,7 +42,7 @@ def _box_to_mesh(box):
                     transform=box.transform, material=box.material, parent=box.parent, name=box.name)
 
 
-def _sphere_to_mesh(primitive):
+def _sphere_to_mesh(primitive, subdivision_count=2):
 
     # Calculate vertices and faces using the icosohedren method
     # We compute a regular icosohedren with 12 vertices and 20 faces.
@@ -53,18 +53,18 @@ def _sphere_to_mesh(primitive):
 
     radius = primitive.radius
 
-    v1 = Vector3D(-1.0, golden_ratio, 0.0).normalise().mul(radius)
-    v2 = Vector3D(1.0, golden_ratio, 0.0).normalise().mul(radius)
-    v3 = Vector3D(-1.0, -golden_ratio, 0.0).normalise().mul(radius)
-    v4 = Vector3D(1.0, -golden_ratio, 0.0).normalise().mul(radius)
-    v5 = Vector3D(0.0, -1.0, golden_ratio).normalise().mul(radius)
-    v6 = Vector3D(0.0, 1.0, golden_ratio).normalise().mul(radius)
-    v7 = Vector3D(0.0, -1.0, -golden_ratio).normalise().mul(radius)
-    v8 = Vector3D(0.0, 1.0, -golden_ratio).normalise().mul(radius)
-    v9 = Vector3D(golden_ratio, 0.0, -1.0).normalise().mul(radius)
-    v10 = Vector3D(golden_ratio, 0.0, 1.0).normalise().mul(radius)
-    v11 = Vector3D(-golden_ratio, 0.0, -1.0).normalise().mul(radius)
-    v12 = Vector3D(-golden_ratio, 0.0, 1.0).normalise().mul(radius)
+    v1 = Vector3D(-1.0, golden_ratio, 0.0).normalise() * radius
+    v2 = Vector3D(1.0, golden_ratio, 0.0).normalise() * radius
+    v3 = Vector3D(-1.0, -golden_ratio, 0.0).normalise() * radius
+    v4 = Vector3D(1.0, -golden_ratio, 0.0).normalise() * radius
+    v5 = Vector3D(0.0, -1.0, golden_ratio).normalise() * radius
+    v6 = Vector3D(0.0, 1.0, golden_ratio).normalise() * radius
+    v7 = Vector3D(0.0, -1.0, -golden_ratio).normalise() * radius
+    v8 = Vector3D(0.0, 1.0, -golden_ratio).normalise() * radius
+    v9 = Vector3D(golden_ratio, 0.0, -1.0).normalise() * radius
+    v10 = Vector3D(golden_ratio, 0.0, 1.0).normalise() * radius
+    v11 = Vector3D(-golden_ratio, 0.0, -1.0).normalise() * radius
+    v12 = Vector3D(-golden_ratio, 0.0, 1.0).normalise() * radius
 
     vertices = [
         [v1.x, v1.y, v1.z],
@@ -105,7 +105,6 @@ def _sphere_to_mesh(primitive):
     ]
 
     # Optional - subdivision of icosohedren to increase resolution
-    subdivision_count = 2
     num_vertices = 12
     num_triangles = 20
     for i in range(subdivision_count):
@@ -118,21 +117,24 @@ def _sphere_to_mesh(primitive):
             v0 = Vector3D(vertices[v0_id][0], vertices[v0_id][1], vertices[v0_id][2])
             v1 = Vector3D(vertices[v1_id][0], vertices[v1_id][1], vertices[v1_id][2])
             v2 = Vector3D(vertices[v2_id][0], vertices[v2_id][1], vertices[v2_id][2])
+
             # subdivide with three new vertices
-            v3 = v0.add(v1).mul(0.5)
+            v3 = (v0 + v1).normalise() * radius
             v3_id = num_vertices
-            v4 = v1.add(v2).mul(0.5)
+            v4 = (v1 + v2).normalise() * radius
             v4_id = num_vertices + 1
-            v5 = v2.add(v0).mul(0.5)
+            v5 = (v2 + v0).normalise() * radius
             v5_id = num_vertices + 2
             vertices.append([v3.x, v3.y, v3.z])
             vertices.append([v4.x, v4.y, v4.z])
             vertices.append([v5.x, v5.y, v5.z])
+
             # ... and three new faces
             triangles[j] = [v0_id, v3_id, v5_id]  # replace the first face
             triangles.append([v3_id, v1_id, v4_id])
-            triangles.append([v5_id, v2_id, v5_id])
+            triangles.append([v5_id, v2_id, v4_id])
             triangles.append([v3_id, v4_id, v5_id])
+
             num_vertices += 3
             num_triangles += 3
 
