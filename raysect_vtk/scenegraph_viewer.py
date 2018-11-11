@@ -50,6 +50,7 @@ def visualise_scenegraph(camera, focal_distance=1, zoom=1):
     vtk_camera.SetDistance(focal_distance)
     vtk_camera.Zoom(zoom)
     renderer.SetActiveCamera(vtk_camera)
+    renderer.SetBackground(1.0, 0.9688, 0.8594)
 
     # Start the event loop.
     iren.Start()

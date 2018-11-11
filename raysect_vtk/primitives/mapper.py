@@ -2,10 +2,10 @@
 import vtk
 
 from raysect.core import Node
-from raysect.primitive import Box, Sphere, Cylinder, Cone, Parabola, Intersect, Union, Subtract
+from raysect.primitive import Box, Sphere, Cylinder, Cone, Parabola, Mesh, Intersect, Union, Subtract
 
 from raysect_vtk.utility import convert_to_vtk_transform
-from raysect_vtk.primitives.geometric_primitives import VTKBox, VTKSphere, VTKCylinder, VTKCone, VTKGeometricPrimitive
+from raysect_vtk.primitives.geometric_primitives import VTKBox, VTKSphere, VTKCylinder, VTKCone, VTKMesh, VTKGeometricPrimitive
 
 
 def map_raysect_element_to_vtk(raysect_element):
@@ -29,6 +29,10 @@ def map_raysect_element_to_vtk(raysect_element):
     elif isinstance(raysect_element, Parabola):
         print("loading parabola", raysect_element)
         raise NotImplementedError("Parabolic primitives are not supported for visualisation at this time.")
+
+    elif isinstance(raysect_element, Mesh):
+        print("loading mesh", raysect_element)
+        return VTKMesh(raysect_element)
 
     elif isinstance(raysect_element, Intersect):
         return VTKIntersection(raysect_element)

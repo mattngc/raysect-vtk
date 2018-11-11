@@ -2,24 +2,29 @@
 import vtk
 
 from raysect.core import Point3D, rotate_x
-from raysect.primitive import Box, Sphere, Cylinder, Cone
+from raysect.primitive import Box, Sphere, Cylinder, Cone, Mesh
 
 from raysect_vtk.utility import convert_to_vtk_transform
 
 
 class VTKGeometricPrimitive:
 
-    def __init__(self, raysect_primitive, geometry_source):
+    def __init__(self, raysect_primitive, vtk_polydata):
 
         self._raysect_primitive = raysect_primitive
 
         transform = convert_to_vtk_transform(raysect_primitive.transform)
         self._transform = transform
 
-        self._geometry_source = geometry_source
+        self._geometry_source = vtk_polydata
 
         transform_filter = vtk.vtkTransformPolyDataFilter()
-        transform_filter.SetInputConnection(geometry_source.GetOutputPort())
+        if isinstance(vtk_polydata, vtk.vtkPolyData):
+            transform_filter.SetInputData(vtk_polydata)
+        elif isinstance(vtk_polydata, vtk.vtkPolyDataAlgorithm):
+            transform_filter.SetInputConnection(vtk_polydata.GetOutputPort())
+        else:
+            raise TypeError("Incompatible vtk object given to VTKGeometricPrimitive.")
         transform_filter.SetTransform(self.transform)
         transform_filter.Update()
         self._transform_filter = transform_filter
@@ -140,7 +145,7 @@ class VTKCone(VTKGeometricPrimitive):
 
     def __init__(self, raysect_cone):
 
-        if isinstance(raysect_cone, Cone):
+        if not isinstance(raysect_cone, Cone):
             raise TypeError("Must be a Raysect Cone.")
 
         cone_source = vtk.vtkConeSource()
@@ -152,3 +157,33 @@ class VTKCone(VTKGeometricPrimitive):
         cone_source.Update()
 
         super().__init__(raysect_cone, cone_source)
+
+
+class VTKMesh(VTKGeometricPrimitive):
+
+    def __init__(self, raysect_mesh):
+
+        if not isinstance(raysect_mesh, Mesh):
+            raise TypeError("Must be a Raysect Mesh.")
+
+        # We'll create the building blocks of polydata including data attributes.
+        vtk_mesh = vtk.vtkPolyData()
+        points = vtk.vtkPoints()
+        polys = vtk.vtkCellArray()
+
+        # Load the point, cell, and data attributes.
+        for i, xi in enumerate(raysect_mesh.data.vertices):
+            points.InsertPoint(i, xi)
+        for pt in raysect_mesh.data.triangles:
+            # make an ID list for each cell
+            vil = vtk.vtkIdList()
+            for j in pt:
+                vil.InsertNextId(int(j))
+            # Define the cell through the list of point IDs.
+            polys.InsertNextCell(vil)
+
+        # We now assign the pieces to the vtkPolyData.
+        vtk_mesh.SetPoints(points)
+        vtk_mesh.SetPolys(polys)
+
+        super().__init__(raysect_mesh, vtk_mesh)
