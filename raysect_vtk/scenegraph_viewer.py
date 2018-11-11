@@ -5,6 +5,9 @@ from raysect.core import Observer, World, Point3D, Vector3D
 from raysect_vtk.primitives.mapper import map_raysect_element_to_vtk, VTKAssembly
 
 
+vtk_colors = vtk.vtkNamedColors()
+
+
 def visualise_scenegraph(camera, focal_distance=1, zoom=1):
 
     if not isinstance(camera, Observer):
@@ -51,6 +54,7 @@ def visualise_scenegraph(camera, focal_distance=1, zoom=1):
     vtk_camera.Zoom(zoom)
     renderer.SetActiveCamera(vtk_camera)
     renderer.SetBackground(1.0, 0.9688, 0.8594)
+    renderer.SetBackground(vtk_colors.GetColor3d("SlateGray"))
 
     # Start the event loop.
     iren.Start()
