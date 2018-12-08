@@ -3,12 +3,12 @@ from raysect.optical import World, translate, rotate
 from raysect.optical.observer import PinholeCamera
 from raysect.primitive import Cone
 
-from raysect_vtk.primitives.to_mesh import _cone_to_mesh
+from raysect_vtk.primitives.to_mesh import cone_to_mesh
 
 
 world = World()
 cone = Cone()
-cone_mesh = _cone_to_mesh(cone)
+cone_mesh = cone_to_mesh(cone)
 cone_mesh.parent = world
 
 

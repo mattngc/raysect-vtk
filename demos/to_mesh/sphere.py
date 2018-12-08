@@ -3,12 +3,12 @@ from raysect.optical import World, translate, rotate
 from raysect.optical.observer import PinholeCamera
 from raysect.primitive import Sphere
 
-from raysect_vtk.primitives.to_mesh import _sphere_to_mesh
+from raysect_vtk.primitives.to_mesh import sphere_to_mesh
 
 
 world = World()
 sphere = Sphere()
-sphere_mesh = _sphere_to_mesh(sphere, subdivision_count=1)
+sphere_mesh = sphere_to_mesh(sphere, subdivision_count=1)
 sphere_mesh.parent = world
 
 

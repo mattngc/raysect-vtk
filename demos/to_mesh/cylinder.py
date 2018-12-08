@@ -3,12 +3,12 @@ from raysect.optical import World, translate, rotate
 from raysect.optical.observer import PinholeCamera
 from raysect.primitive import Cylinder
 
-from raysect_vtk.primitives.to_mesh import _cylinder_to_mesh
+from raysect_vtk.primitives.to_mesh import cylinder_to_mesh
 
 
 world = World()
 cylinder = Cylinder()
-cylinder_mesh = _cylinder_to_mesh(cylinder)
+cylinder_mesh = cylinder_to_mesh(cylinder)
 cylinder_mesh.parent = world
 
 

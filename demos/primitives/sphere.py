@@ -1,15 +1,11 @@
 
 from raysect.optical import World, translate, rotate
 from raysect.optical.observer import PinholeCamera
-from raysect.primitive import Box
-
-from raysect_vtk.primitives.to_mesh import box_to_mesh
+from raysect.primitive import Sphere
 
 
 world = World()
-box = Box(parent=None)
-box_mesh = box_to_mesh(box)
-box_mesh.parent = world
+sphere = Sphere(parent=world, transform=translate(2, 0, 0))
 
 
 camera = PinholeCamera((256, 256), fov=40, parent=world, transform=translate(0, 0.16, -0.4) * rotate(0, -12, 0))
