@@ -10,22 +10,22 @@ def to_mesh(primitive):
 
     if isinstance(primitive, Box):
         print("loading box", primitive)
-        return _box_to_mesh(primitive)
+        return box_to_mesh(primitive)
 
     elif isinstance(primitive, Sphere):
         print("loading sphere", primitive)
-        return _sphere_to_mesh(primitive)
+        return sphere_to_mesh(primitive)
 
     elif isinstance(primitive, Cylinder):
         print("loading cylinder", primitive)
-        return _cylinder_to_mesh(primitive)
+        return cylinder_to_mesh(primitive)
 
     elif isinstance(primitive, Cone):
         print("loading cone", primitive)
-        return _cone_to_mesh(primitive)
+        return cone_to_mesh(primitive)
 
 
-def _box_to_mesh(box):
+def box_to_mesh(box):
 
     if not isinstance(box, Box):
         raise TypeError("The _box_to_mesh() function takes a Raysect Box primitive as an argument, "
@@ -57,7 +57,7 @@ def _box_to_mesh(box):
                 transform=box.transform, material=box.material, name=box.name)
 
 
-def _sphere_to_mesh(sphere, subdivision_count=2):
+def sphere_to_mesh(sphere, subdivision_count=2):
 
     if not isinstance(sphere, Sphere):
         raise TypeError("The _sphere_to_mesh() function takes a Raysect Box primitive as an argument, "
@@ -151,7 +151,7 @@ def _sphere_to_mesh(sphere, subdivision_count=2):
             # ... and three new faces
             triangles[j] = [v0_id, v3_id, v5_id]  # replace the first face
             triangles.append([v3_id, v1_id, v4_id])
-            triangles.append([v5_id, v2_id, v4_id])
+            triangles.append([v4_id, v2_id, v5_id])
             triangles.append([v3_id, v4_id, v5_id])
 
             num_vertices += 3
@@ -161,7 +161,7 @@ def _sphere_to_mesh(sphere, subdivision_count=2):
                 transform=sphere.transform, material=sphere.material, name=sphere.name)
 
 
-def _cylinder_to_mesh(cylinder, vertical_divisions=10, cylindrical_divisions=36, radial_divisions=5):
+def cylinder_to_mesh(cylinder, vertical_divisions=10, cylindrical_divisions=36, radial_divisions=5):
 
     if not isinstance(cylinder, Cylinder):
         raise TypeError("The _cylinder_to_mesh() function takes a Raysect Cylinder primitive as an argument, "
@@ -230,6 +230,7 @@ def _cylinder_to_mesh(cylinder, vertical_divisions=10, cylindrical_divisions=36,
 
     # Make the upper and lower end caps
     lower_cap_vertices, lower_cap_triangles = _make_cap_triangles(cylindrical_divisions, radial_divisions, radius, 0)
+    lower_cap_triangles = np.flip(lower_cap_triangles, 1)
     lower_cap_triangles += len(vertices)
     lower_cap_triangles = lower_cap_triangles.tolist()
 
@@ -247,7 +248,7 @@ def _cylinder_to_mesh(cylinder, vertical_divisions=10, cylindrical_divisions=36,
                 transform=cylinder.transform, material=cylinder.material, name=cylinder.name)
 
 
-def _cone_to_mesh(cone, vertical_divisions=10, cylindrical_divisions=36, base_radial_divisions=5):
+def cone_to_mesh(cone, vertical_divisions=10, cylindrical_divisions=36, base_radial_divisions=5):
 
     if not isinstance(cone, Cone):
         raise TypeError("The _cone_to_mesh() function takes a Raysect Cone primitive as an argument, "
@@ -305,7 +306,7 @@ def _cone_to_mesh(cone, vertical_divisions=10, cylindrical_divisions=36, base_ra
 
     # Triangulate the vertices
     vertices_2d = np.array(cone_base_vertices)[:, 0:2]
-    cone_base_triangles = (Delaunay(vertices_2d).simplices + len(cone_body_vertices)).tolist()
+    cone_base_triangles = np.flip(Delaunay(vertices_2d).simplices + len(cone_body_vertices), 1).tolist()
 
 
     # Combine the resulting triangles together
